@@ -1,0 +1,5 @@
+{
+  "oauth": "YOUR_OAUTH_HERE",
+  "username": "BOT_USERNAME_HERE",
+  "channel": "TARGET_CHANNEL_HERE"
+}
