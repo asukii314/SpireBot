@@ -10,7 +10,7 @@ A mod for Slay the Spire that manages a Twitch bot to respond to commands from c
 
 We need to set up credentials to navigate the Twitch API in order for the bot to listen and respond to chat messages. It is *highly* recommended you use a secondary account for this, both for security purposes and general usability.
 
-1. Create a new twitch.tv account for your bot
+1. Create a new twitch.tv account for your bot and log in to that account.
 2. Download both **SpireBot.jar** and **spirebot_cred.json** from the most recent release on the [Releases page](https://github.com/casey-c/spirebot/releases), and place them into your *SlayTheSpire/mods* folder
 3. Open **spirebot_cred.json** in a text editor so that we can edit in our required credentials. For Windows, this is something like Right click -> Open With Notepad. We'll be filling out the details in the following steps.
 4. Use [https://www.twitchapps.com/tmi/](https://www.twitchapps.com/tmi/) to generate an oauth key that we will need to manage the bot. **IMPORTANT:** keep this key secret - treat it as a password and don't show on stream! Copy this to your clipboard and replace "YOUR_OAUTH_HERE" with this key. (Keep the quotation marks and the leading oauth:.)
