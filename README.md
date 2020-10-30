@@ -1,0 +1,2 @@
+# SpireBot
+WIP
