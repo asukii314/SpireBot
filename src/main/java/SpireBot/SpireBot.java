@@ -1,6 +1,7 @@
 package SpireBot;
 
 import SpireBot.utils.Credentials;
+import SpireBot.utils.ThreadHelper;
 import basemod.BaseMod;
 import basemod.interfaces.PostInitializeSubscriber;
 import basemod.interfaces.StartGameSubscriber;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 @SpireInitializer
 public class SpireBot implements PostInitializeSubscriber, StartGameSubscriber {
     public static void initialize() { new SpireBot(); }
-    private DataTracker dataTracker = new DataTracker();
 
     public SpireBot() {
         BaseMod.subscribe(this);
@@ -22,8 +22,6 @@ public class SpireBot implements PostInitializeSubscriber, StartGameSubscriber {
 
     @Override
     public void receivePostInitialize() {
-        dataTracker.writeToFile();
-
         if (ThreadHelper.start(Credentials.loadFromJSON("mods/spirebot_cred.json"))) {
             System.out.println("Successfully launched thread");
         }
@@ -32,7 +30,6 @@ public class SpireBot implements PostInitializeSubscriber, StartGameSubscriber {
     private void updateSeed() {
         String seed = SeedHelper.getUserFacingSeedString();
         System.out.println("Seed is: " + seed);
-        dataTracker.setAndWriteIfNew("seed", seed);
     }
 
     private void updateInfo() {
@@ -51,7 +48,6 @@ public class SpireBot implements PostInitializeSubscriber, StartGameSubscriber {
         sb.append(". Type \"!spire list\" in chat for more commands.");
 
         String res = sb.toString();
-        dataTracker.setAndWriteIfNew("info", res);
     }
 
     @Override
@@ -59,7 +55,6 @@ public class SpireBot implements PostInitializeSubscriber, StartGameSubscriber {
         System.out.println("OJB: started game");
         if (CardCrawlGame.isInARun()) {
             updateSeed();
-            //updateCharacterName();
             updateInfo();
         }
     }

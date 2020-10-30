@@ -1,6 +1,6 @@
 package SpireBot.patches;
 
-import SpireBot.ThreadHelper;
+import SpireBot.utils.ThreadHelper;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.megacrit.cardcrawl.core.CardCrawlGame;

@@ -1,5 +1,6 @@
-package SpireBot;
+package SpireBot.utils;
 
+import SpireBot.SpireBot;
 import SpireBot.networking.TwitchBot;
 import SpireBot.utils.Credentials;
 

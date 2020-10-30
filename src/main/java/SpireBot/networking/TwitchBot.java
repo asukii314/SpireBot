@@ -1,5 +1,6 @@
 package SpireBot.networking;
 
+import SpireBot.info.InfoFinder;
 import SpireBot.utils.Credentials;
 
 import java.io.BufferedReader;
@@ -26,18 +27,19 @@ public class TwitchBot {
     // --------------------------------------------------------------------------------
 
     private void handleCommand(String command) {
-        String response = new String();
+        System.out.println("Handling command '" + command + "'");
+        String response;
 
-        switch (command) {
-            case "help":
-                response = "/me SpireBot is WIP.";
-                break;
-            case "list":
-                response = "/me Listing all possible commands: []";
-                break;
-            default:
-                response = "/me ERROR: invalid command. Try " + prefix + "list for a list of commands.";
-        }
+        if (command.equals("help"))
+            response = InfoFinder.getHelp();
+        else if (command.equals("list"))
+            response = InfoFinder.getList();
+        else if (command.equals("info"))
+            response = InfoFinder.getInfo();
+        else if (command.equals("seed"))
+            response = InfoFinder.getSeed();
+        else
+            response = InfoFinder.getError();
 
         sendMsg(response);
     }
