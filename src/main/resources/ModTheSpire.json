@@ -2,7 +2,7 @@
   "modid": "ojb_SpireBot",
   "name": "SpireBot",
   "author_list": ["ojb"],
-  "description": "This mod writes in game data to a JSON file to be used by the SpireBot Twitch bot program. WIP",
+  "description": "An integrated Twitch bot. See https://github.com/casey-c/spirebot for details on use. (It won't work out until configured!)",
   "version": "0.0.1",
   "sts_version": "06-22-2020",
   "mts_version": "2.6.0",
