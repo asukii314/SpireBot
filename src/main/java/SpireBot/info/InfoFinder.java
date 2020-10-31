@@ -13,13 +13,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class InfoFinder {
+    private static final String notRun = "Not currently in a run!";
+
     public static String getSeed() {
-        if (CardCrawlGame.isInARun())
-            return "The seed is: " + SeedHelper.getUserFacingSeedString();
-        else
-            return "Not currently in a run!";
+        return (CardCrawlGame.isInARun()) ? "The seed is: " + SeedHelper.getUserFacingSeedString() : notRun;
     }
 
     public static String getHelp(String prefix) {
@@ -49,7 +50,7 @@ public class InfoFinder {
             return sb.toString();
         }
         else
-            return "Not currently in a run!";
+            return notRun;
     }
 
     public static String getRelics() {
@@ -58,70 +59,120 @@ public class InfoFinder {
             return relics.toString();
         }
 
-        return "Not currently in a run!";
+        return notRun;
     }
 
-    public static String getAct1() {
-        if (CardCrawlGame.isInARun()) {
-            BetterMetrics metrics = new BetterMetrics();
-            metrics.build();
+    private static String buildActData(int minFloor, int maxFloor) {
+        // DEBUG ONLY (can comment out)
+        BetterMetrics metrics = new BetterMetrics();
+        metrics.build();
+        metrics.print();
+        //-------------
 
-            System.out.println("Better metrics consists of: ");
-            for (Object key : metrics.params.keySet()) {
-                System.out.println(" [*] " + key.toString());
-                System.out.println(metrics.params.get(key).toString());
-                System.out.println();
-            }
-            System.out.println("--------------");
+        StringBuilder sb = new StringBuilder();
+        TreeMap<Integer, String> floor_data = new TreeMap<>();
 
-            StringBuilder sb = new StringBuilder();
-            // card_choices | damage_taken | path_per_floor
+        // FIGHTS
+        ArrayList<HashMap> dt = CardCrawlGame.metricData.damage_taken;
+        for (HashMap floor : dt) {
+            if (floor.containsKey("floor")) {
+                int floor_num = Math.round(Float.parseFloat(floor.get("floor").toString()));
 
-            // NOTE:
-            // path_per_floor shows what we had on each tile, e.g. [M, ?, M, ?]       <- notice the 3rd floor was a ? floor that rolled a monster
-            // path_taken shows what we pathed through originally, e.g. [M, ?, ?, ?]
+                // Only take events in bounds
+                if (floor_num < minFloor || floor_num > maxFloor)
+                    continue;
 
-            // event_choices is really really complicated map, but is definitely useful. probably start off with just .event_name and .player_choice maybe?
-            // card_choices is also really interesting to look at
+                if (floor.containsKey("damage")) {
+                    int damage = Math.round(Float.parseFloat(floor.get("damage").toString()));
 
-
-            ArrayList<HashMap> dt = CardCrawlGame.metricData.damage_taken;
-            for (HashMap floor : dt) {
-                if (floor.containsKey("floor")) {
-                    String floor_num = floor.get("floor").toString();
-
-                    if (floor.containsKey("damage")) {
-                        String damage = floor.get("damage").toString();
-
-                        if (floor.containsKey("enemies")) {
-                            String enemies = floor.get("enemies").toString();
-
-                            sb.append("On floor " + floor_num + ", we took " + damage + " damage to " + enemies + ". ");
-                        }
+                    if (floor.containsKey("enemies")) {
+                        String enemies = floor.get("enemies").toString();
+                        floor_data.put(floor_num, "Floor " + floor_num + ": " + damage + " damage to " + enemies + ". ");
                     }
                 }
             }
-
-            //System.out.println(sb.toString());
-            return sb.toString();
-
-//            Metrics metrics = new Metrics();
-//            //ReflectionHacks
-//            try {
-//                Method method = Metrics.class.getDeclaredMethod("gatherAllData", boolean.class, boolean.class, MonsterGroup.class);
-//                method.setAccessible(true);
-//                method.invoke(metrics);
-//
-//                metrics.
-//            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-            //private void gatherAllData(boolean death, boolean trueVictor, MonsterGroup monsters) {
-
-            //return "";
         }
-        else {
-            return "Not currently in a run!";
+
+        // EVENTS
+        ArrayList<HashMap> ec = CardCrawlGame.metricData.event_choices;
+        for (HashMap floor : ec) {
+            if (floor.containsKey("floor")) {
+                int floor_num = Math.round(Float.parseFloat(floor.get("floor").toString()));
+
+                // Only take events in bounds
+                if (floor_num < minFloor || floor_num > maxFloor)
+                    continue;
+
+                if (floor.containsKey("event_name")) {
+                    String name = floor.get("event_name").toString();
+
+                    if (floor.containsKey("player_choice")) {
+                        String choice = floor.get("player_choice").toString();
+
+                        floor_data.put(floor_num, "Floor " + floor_num + ": " + name + " Event (" + choice + "). ");
+                    }
+                }
+            }
         }
+
+        // Combine them in order of floor
+        for (String s : floor_data.values())
+            sb.append(s);
+
+        return sb.toString();
+    }
+
+    public static String getAct1() {
+        return (CardCrawlGame.isInARun()) ? buildActData(0, 17) : notRun;
+    }
+
+    public static String getAct2() {
+        return (CardCrawlGame.isInARun()) ? buildActData(17, 34) : notRun;
+    }
+
+    public static String getAct3() {
+        return (CardCrawlGame.isInARun()) ? buildActData(34, 51) : notRun;
+    }
+
+    public static String getAct4() {
+        return (CardCrawlGame.isInARun()) ? buildActData(51, 55) : notRun;
+    }
+
+    public static String bossRelics() {
+        ArrayList<HashMap> boss_relics = CardCrawlGame.metricData.boss_relics;
+        StringBuilder sb = new StringBuilder();
+
+        // boss_relics: [{not_picked=[Busted Crown, Coffee Dripper], picked=Pandora's Box}]
+        int act = 1;
+        for (HashMap k : boss_relics) {
+            if (k.containsKey("not_picked")) {
+                ArrayList<String> notPicked = (ArrayList<String>) k.get("not_picked");
+                if (notPicked.size() < 2)
+                    continue;
+
+                if (k.containsKey("picked")) {
+                    String picked = k.get("picked").toString();
+
+                    sb.append("At the end of act " + act++ + ", we chose " + picked + " over " + notPicked.get(0) + " and " + notPicked.get(1) + ". ");
+                }
+                else if (notPicked.size() == 3) {
+                    sb.append("At the end of act " + act++ + ", we took nothing and skipped " + notPicked.get(0) + ", " + notPicked.get(1) + ", and " + notPicked.get(2) + ". ");
+                }
+            }
+        }
+
+        return sb.toString();
+    }
+
+    public static String hp() {
+        ArrayList<Integer> curr = CardCrawlGame.metricData.current_hp_per_floor;
+        ArrayList<Integer> max = CardCrawlGame.metricData.max_hp_per_floor;
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < curr.size() && i < max.size(); ++i) {
+            sb.append("Floor " + (i+1) + ": [" + curr.get(i) + " / " + max.get(i) + "]. ");
+        }
+
+        return sb.toString();
     }
 }

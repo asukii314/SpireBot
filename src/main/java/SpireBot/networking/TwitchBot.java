@@ -109,6 +109,11 @@ public class TwitchBot {
     }
 
     public void sendMsg(String data) {
+        // Actual limit is 500, but let the credentials and headers and newlines have some leeway
+        if (data.length() > 450) {
+            System.out.println("OJB WARNING: data too long!");
+        }
+
         String msg = "PRIVMSG #" + credentials.channel + " :" + data + "\r\n";
         out.write(msg);
         out.flush();

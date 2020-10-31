@@ -13,9 +13,15 @@ public class DefaultCommands {
         CommandDatabase.register(prefix, "list", () -> CommandDatabase.getAllCommandsByPrefix(prefix));
 
         CommandDatabase.register(prefix, "act1", InfoFinder::getAct1);
+        CommandDatabase.register(prefix, "act2", InfoFinder::getAct2);
+        CommandDatabase.register(prefix, "act3", InfoFinder::getAct3);
+        CommandDatabase.register(prefix, "act4", InfoFinder::getAct4);
+
         CommandDatabase.register(prefix, "relics", InfoFinder::getRelics);
+        CommandDatabase.register(prefix, "bossrelics", InfoFinder::bossRelics);
+        CommandDatabase.register(prefix, "hp", InfoFinder::hp);
 
         // TODO: enable or disable by config
-        CommandDatabase.registerPrefixErrorMessage(prefix, () -> "ERROR: Not a recognized command. Please use '" + prefix + "help' for more information about this bot.");
+        //CommandDatabase.registerPrefixErrorMessage(prefix, () -> "ERROR: Not a recognized command. Please use '" + prefix + "help' for more information about this bot.");
     }
 }

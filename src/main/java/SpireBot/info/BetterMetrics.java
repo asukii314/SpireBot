@@ -10,6 +10,7 @@ import com.megacrit.cardcrawl.screens.DeathScreen;
 import com.megacrit.cardcrawl.screens.VictoryScreen;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class BetterMetrics {
     public HashMap<Object, Object> params = new HashMap();
@@ -96,5 +97,13 @@ public class BetterMetrics {
 //        } else {
 //            this.addData("killed_by", null);
 //        }
+    }
+
+    public void print() {
+        System.out.println("Better Metrics:");
+        for (Map.Entry<Object, Object> x : params.entrySet()) {
+            System.out.println(x.getKey() + ": " + x.getValue());
+        }
+        System.out.println("------");
     }
 }
