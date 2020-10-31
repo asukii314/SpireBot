@@ -1,5 +1,7 @@
 package SpireBot.networking;
 
+import SpireBot.info.CommandDatabase;
+import SpireBot.info.DefaultCommands;
 import SpireBot.info.InfoFinder;
 import SpireBot.utils.Credentials;
 
@@ -14,7 +16,7 @@ public class TwitchBot {
     private PrintWriter out;
     private BufferedReader in;
 
-    private String prefix = "!spire ";
+//    private String prefix = "!spire ";
     private Credentials credentials;
 
     // --------------------------------------------------------------------------------
@@ -26,30 +28,29 @@ public class TwitchBot {
 
     // --------------------------------------------------------------------------------
 
-    private void handleCommand(String command) {
-        System.out.println("Handling command '" + command + "'");
-        String response;
-
-        if (command.equals("help"))
-            response = InfoFinder.getHelp();
-        else if (command.equals("list"))
-            response = InfoFinder.getList();
-        else if (command.equals("info"))
-            response = InfoFinder.getInfo();
-        else if (command.equals("seed"))
-            response = InfoFinder.getSeed();
-        else
-            response = InfoFinder.getError();
-
-        sendMsg(response);
-    }
+//    private void handleCommand(String command) {
+//        System.out.println("Handling command '" + command + "'");
+//        String response;
+//
+//        if (command.equals("help"))
+//            response = InfoFinder.getHelp();
+//        else if (command.equals("list"))
+//            response = InfoFinder.getList();
+//        else if (command.equals("info"))
+//            response = InfoFinder.getInfo();
+//        else if (command.equals("seed"))
+//            response = InfoFinder.getSeed();
+//        else
+//            response = InfoFinder.getError();
+//
+//        sendMsg(response);
+//    }
 
     private void handleMsg(String user, String msg) {
-        System.out.println("Handling message: '" + msg + "'");
-        if (msg.startsWith(prefix)) {
-            handleCommand(msg.substring(prefix.length()));
+        String response = CommandDatabase.handleMessage(user, msg);
+        if (!response.isEmpty()) {
+            sendMsg(response);
         }
-
     }
 
     // --------------------------------------------------------------------------------
@@ -65,8 +66,10 @@ public class TwitchBot {
             sendRaw("NICK " + credentials.username);
             sendRaw("JOIN #" + credentials.channel);
 
-            System.out.println("Finished connecting to the channel, attempting to send arrival msg to chat");
+            // Other classes should register their commands at any time before users start inputting to the chat
+            DefaultCommands.setup();
 
+            System.out.println("Finished connecting to the channel, attempting to send arrival msg to chat");
             sendMsg("/me has entered the chat");
 
             String res;
