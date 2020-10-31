@@ -34,10 +34,14 @@ We need to set up credentials to navigate the Twitch API in order for the bot to
   * !spire help - Prints a help message.
   * !spire seed - Prints the current seed if in a run.
   * !spire info - Prints some basics about the current run. (WIP/Buggy)
+  * !spire act1 - (also act2, etc.) Shows what we encountered on different floors.
+  * !spire hp - Shows hp values at different points in the run (bugged - stops working once it exceeds 500 chars in length mid act 2)
+  * !spire bossrelics - Shows boss relics offered and picked
   
   ## Notes
  
- Right now the prefix (!spire) is hardcoded, but should be configurable in the future. More useful commands are definitely coming if this test works out.
+ * Please make your bots into moderators so that they can send more messages / minute.
+ * There are a number of issues still being fixed, and a number of commands still to be implemented
   
   
   
