@@ -21,6 +21,8 @@ public class DefaultCommands {
         CommandDatabase.register(prefix, "bossrelics", InfoFinder::bossRelics);
         CommandDatabase.register(prefix, "hp", InfoFinder::hp);
 
+        CommandDatabase.register(prefix, "slice", InfoFinder::slicesSkipped);
+
         // TODO: enable or disable by config
         //CommandDatabase.registerPrefixErrorMessage(prefix, () -> "ERROR: Not a recognized command. Please use '" + prefix + "help' for more information about this bot.");
     }

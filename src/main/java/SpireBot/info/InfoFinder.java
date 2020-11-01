@@ -164,6 +164,7 @@ public class InfoFinder {
         return sb.toString();
     }
 
+    // TODO: this is far too long for late game. Need to split it by act perhaps?
     public static String hp() {
         ArrayList<Integer> curr = CardCrawlGame.metricData.current_hp_per_floor;
         ArrayList<Integer> max = CardCrawlGame.metricData.max_hp_per_floor;
@@ -174,5 +175,50 @@ public class InfoFinder {
         }
 
         return sb.toString();
+    }
+
+    // card_choices: [{not_picked=[Anger, Headbutt], picked=Pommel Strike, floor=1.0}, {not_picked=[Iron Wave, Bloodletting], picked=Inflame, floor=3.0}, {not_picked=[Dropkick, Intimidate, Iron Wave], picked=SKIP, floor=6.0}, {not_picked=[Clash, True Grit], picked=Evolve, floor=7.0}, {not_picked=[Clash, Evolve], picked=Dual Wield, floor=7.0}, {not_picked=[Reckless Charge, Dropkick], picked=Anger, floor=7.0}, {not_picked=[Anger, Perfected Strike], picked=Clothesline, floor=7.0}, {not_picked=[Searing Blow, Heavy Blade], picked=Thunderclap, floor=7.0}, {not_picked=[Warcry, Burning Pact, Whirlwind], picked=SKIP, floor=11.0}, {not_picked=[Pommel Strike, Anger], picked=Limit Break, floor=12.0}, {not_picked=[Headbutt, Perfected Strike, Whirlwind], picked=SKIP, floor=14.0}, {not_picked=[Double Tap, Barricade], picked=Limit Break, floor=16.0}, {not_picked=[Anger, Inflame], picked=Heavy Blade, floor=18.0}, {not_picked=[Twin Strike, Rampage, Burning Pact], picked=SKIP, floor=21}, {not_picked=[Searing Blow, Intimidate, Iron Wave], picked=SKIP, floor=25}]
+    // TODO: probably doesn't work for shops / orrery but idk
+    public static String slicesSkipped() {
+        int timesSeen = 0;
+        int timesPickedOther = 0;
+        int timesPicked = 0;
+
+        ArrayList<HashMap> choices = CardCrawlGame.metricData.card_choices;
+        for (HashMap m : choices) {
+            boolean skippedSlice = false;
+
+            if (m.containsKey("not_picked")) {
+                ArrayList<String> notPicked = (ArrayList<String>) m.get("not_picked");
+                if (notPicked.contains("Slice")) {
+                    skippedSlice = true;
+                }
+            }
+
+            if (m.containsKey("picked")) {
+                String picked = m.get("picked").toString();
+
+                if (picked == "Slice") {
+                    timesSeen++;
+                    timesPicked++;
+                }
+                else if (skippedSlice) {
+                    timesSeen++;
+                    timesPickedOther++;
+                }
+            }
+        }
+
+        if (timesSeen == 0)
+            return "We haven't seen any Slices FeelsBadMan";
+        else {
+            String res = "We have seen " + timesSeen + " Slices and picked " + timesPicked + " of them.";
+            if (timesPickedOther > 0)
+                res += " We took something else " + timesPickedOther + " times. For shame!";
+            else
+                res += " We took them all! PogChamp";
+            return res;
+        }
+
     }
 }
