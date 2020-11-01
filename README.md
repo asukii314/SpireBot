@@ -1,6 +1,8 @@
 # SpireBot
 A mod for Slay the Spire that manages a Twitch bot to respond to commands from chat. Current commands are practically useless beyond "!spire seed", but more updates to improve the usability are planned. This is more a proof of concept and more for testing purposes at the moment.
 
+![Screenshot](github/chat.png)
+
 ## Prerequisites
 * A secondary Twitch account to run the bot
 * ModTheSpire (available on the Steam Workshop)
