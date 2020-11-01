@@ -83,29 +83,26 @@ public class TwitchBot {
 
     // --------------------------------------------------------------------------------
 
-    public void sendRaw(String data) {
-        String msg = data + "\r\n";
-        out.write(msg);
-        out.flush();
-    }
 
     // Actual limit is 500, but let there be some space for boilerplate
     private static final int MAX_PACKET_SIZE = 450;
 
+    // Attempts to intelligently split data into pieces no bigger than 450 chars. - Each piece is a "sentence" ending in
+    // the two character sequence ". " (period space). Thus, sentences are preserved hopefully.
+    //
+    // Returns null if a smaller chunk (sentence) is longer than the PACKET size on its own. (Will fallback to force
+    // split, see below)
     private ArrayList<String> smartSplit(String data) {
         ArrayList<String> res = new ArrayList<>();
 
         int length = data.length();
         if (length > MAX_PACKET_SIZE) {
-            // need to split
             String[] x = data.split("\\. ");
-            System.out.println("Split on periodspace into " + x.length + " chunks");
 
             StringBuilder sb = new StringBuilder();
 
             for (String s : x) {
                 int subLen = s.length() + 2;
-                System.out.println("Checking sub of size "+ subLen + ": '" + s + "'");
 
                 // Can't smart split (this sentence is too long on its own!)
                 if (subLen > MAX_PACKET_SIZE)
@@ -129,12 +126,27 @@ public class TwitchBot {
             res.add(data);
         }
 
-        System.out.println("ORIGINAL SIZE: " + data.length() + ": '" + data + "'");
-        System.out.println("Split original data of length " + data.length() + " into " + res.size() + " chunks.");
-        for (String s : res) {
-            System.out.println("\tSIZE " + s.length() + ": '" + s + "'");
+        return res;
+    }
+
+    // Split into MAX_PACKET_SIZE chunks without regard to semantic content (harsh borders between messages)
+    private ArrayList<String> forceSplit(String data) {
+        ArrayList<String> res = new ArrayList<>();
+        if (data.length() > MAX_PACKET_SIZE) {
+            String s1 = data.substring(0, MAX_PACKET_SIZE);
+            String s2 = data.substring(MAX_PACKET_SIZE);
+
+            res.add(s1);
+
+            // Recurse
+            if (s2.length() > MAX_PACKET_SIZE)
+                res.addAll(forceSplit(s2));
+            else
+                res.add(s2);
         }
-        System.out.println("----");
+        else {
+            res.add(data);
+        }
 
         return res;
     }
@@ -142,36 +154,26 @@ public class TwitchBot {
     private void splitAndSend(String data) {
         if (data.length() > MAX_PACKET_SIZE) {
             ArrayList<String> split = smartSplit(data);
-            if (split == null) {
-                System.out.println("Failed to split, doing nothing!");
-            }
-            else {
-                System.out.print("Successfully split into chunks: [");
-                for (String s : split)
-                    System.out.print(s.length() + " ");
-                System.out.println("]");
 
-                // Time to sendMsg on each chunk
-                for (String s : split)
-                    sendMsg(s);
-            }
-//            System.out.println("Need to split data: " + data);
-//            System.out.println("It's size is " + data.length());
-//
-//            String s1 = data.substring(0, MAX_PACKET_SIZE);
-//            System.out.println("Part 1 is size " + s1.length() + ": " + s1);
-//
-//            String s2 = data.substring(MAX_PACKET_SIZE);
-//            System.out.println("Part 2 is size " + s2.length() + ": " + s2);
-//
-//            // TODO: send s1 for real
-//            // TODO: recurse on s2
+            if (split == null)
+                split = forceSplit(data);
+
+            // Time to sendMsg on each chunk
+            for (String s : split)
+                sendMsg(s);
         }
+    }
+
+    // --------------------------------------------------------------------------------
+
+    public void sendRaw(String data) {
+        String msg = data + "\r\n";
+        out.write(msg);
+        out.flush();
     }
 
     public void sendMsg(String data) {
         if (data.length() > 450) {
-            System.out.println("OJB WARNING: data too long! -- attempting to split");
             splitAndSend(data);
         }
         else {
