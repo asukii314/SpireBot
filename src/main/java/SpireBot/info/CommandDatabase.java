@@ -108,14 +108,18 @@ public class CommandDatabase {
         if (instance.commands2.containsKey(prefix)) {
             HashMap<String, Supplier<String>> inner = instance.commands2.get(prefix);
 
-            int curr = 0;
+            ArrayList<String> all = new ArrayList(inner.keySet());
+            all.sort(String::compareTo);
+
             StringBuilder sb = new StringBuilder("The list of commands starting with " + prefix + "are: [ ");
-            for (String command : inner.keySet()) {
+            int curr = 0;
+            for (String command : all) {
                 sb.append(command);
 
-                if (curr++ < inner.keySet().size() - 1)
+                if (curr++ < all.size() - 1)
                     sb.append(", ");
             }
+
             sb.append(" ]");
             return sb.toString();
         }

@@ -18,6 +18,10 @@ public class TwitchBot {
 
     private Credentials credentials;
 
+    // TODO: lock behind a config option
+    private static final String leading = "/me ";
+    //private static final String leading = "";
+
     // --------------------------------------------------------------------------------
 
     public TwitchBot(Credentials credentials) {
@@ -51,7 +55,8 @@ public class TwitchBot {
             DefaultCommands.setup();
 
             System.out.println("Finished connecting to the channel, attempting to send arrival msg to chat");
-            sendMsg("/me has entered the chat");
+            //sendMsg("/me has entered the chat");
+            sendMsg("has entered the chat");
 
             String res;
             while (true) {
@@ -177,6 +182,8 @@ public class TwitchBot {
             splitAndSend(data);
         }
         else {
+            data = leading + data;
+
             String msg = "PRIVMSG #" + credentials.channel + " :" + data + "\r\n";
             out.write(msg);
             out.flush();

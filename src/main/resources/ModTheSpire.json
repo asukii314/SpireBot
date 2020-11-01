@@ -3,7 +3,7 @@
   "name": "SpireBot",
   "author_list": ["ojb"],
   "description": "An integrated Twitch bot. See https://github.com/casey-c/spirebot for details on use. (It won't work out until configured!)",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "sts_version": "06-22-2020",
   "mts_version": "2.6.0",
   "dependencies": ["basemod"]

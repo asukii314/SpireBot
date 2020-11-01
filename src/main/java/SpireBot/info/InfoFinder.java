@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 public class InfoFinder {
+
     private static final String notRun = "Not currently in a run!";
 
     public static String getSeed() {
@@ -52,12 +53,11 @@ public class InfoFinder {
 
     private static String buildActData(int minFloor, int maxFloor) {
         // DEBUG ONLY (TODO: comment out)
-        BetterMetrics metrics = new BetterMetrics();
-        metrics.build();
-        metrics.print();
+//        BetterMetrics metrics = new BetterMetrics();
+//        metrics.build();
+//        metrics.print();
         //-------------
 
-        StringBuilder sb = new StringBuilder();
         TreeMap<Integer, String> floor_data = new TreeMap<>();
 
         // FIGHTS
@@ -104,6 +104,7 @@ public class InfoFinder {
         }
 
         // Combine them in order of floor
+        StringBuilder sb = new StringBuilder();
         for (String s : floor_data.values())
             sb.append(s);
 
