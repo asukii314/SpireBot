@@ -1,5 +1,5 @@
 # SpireBot
-A mod for Slay the Spire that manages a Twitch bot to respond to commands from chat. Current commands are practically useless beyond "!spire seed", but more updates to improve the usability are planned. This is more a proof of concept and more for testing purposes at the moment.
+A mod for Slay the Spire with an integrated Twitch chat bot. It enables viewers in chat to access details usually only available on the run history screen at any time during the stream. This mod is currently WIP and has a number of known bugs.
 
 ![Screenshot](github/chat.png)
 
@@ -31,7 +31,8 @@ We need to set up credentials to navigate the Twitch API in order for the bot to
   10. If everything worked correctly, your bot should join your chat with a message "BOT_USERNAME has joined the chat". Once that message is shown, you can try and interact with your bot by typing "!spire help" into chat. If something went wrong and you get no responses, double check to make sure you didn't screw up your JSON file. Reread over it carefully and compare to the example above to make sure you have the right details in the right places and no misplaced quotation marks or commas.
   
   ## Features
-  More features are planned, but currently there are some basics in place for testing purposes.
+  More features are planned for future updates. For now, these commands provide some starter information about the run.
+  
   * !spire list - Lists out all commands the bot responds to.
   * !spire help - Prints a help message.
   * !spire seed - Prints the current seed if in a run.
@@ -39,11 +40,13 @@ We need to set up credentials to navigate the Twitch API in order for the bot to
   * !spire act1 - (also act2, etc.) Shows what we encountered on different floors.
   * !spire hp - Shows hp values at different points in the run (bugged - stops working once it exceeds 500 chars in length mid act 2)
   * !spire bossrelics - Shows boss relics offered and picked
+  * !spire slice - A very important command that tracks the times "Slice" is seen (and picked of course - you wouldn't want to miss out on 5 free damage!)
   
   ## Notes
  
- * Please make your bots into moderators so that they can send more messages / minute.
- * There are a number of issues still being fixed, and a number of commands still to be implemented
+ * Please make your bots into moderators so that they can send more messages / minute. This mod still needs some spam mitigation and self imposed limits to handle larger chats.
+ * There are some issues with Rests/Shops not being tracked properly in the act commands
+ * There are only a limited number of characters allowed per comment (500) - so commands that spit out tons of text info (e.g. !spire hp) will simply not have a response in game. I want to fix this eventually!
   
   
   
