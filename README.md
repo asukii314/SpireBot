@@ -47,6 +47,11 @@ We need to set up credentials to navigate the Twitch API in order for the bot to
  * Please make your bots into moderators so that they can send more messages / minute. This mod still needs some spam mitigation and self imposed limits to handle larger chats.
  * There are some issues with Rests/Shops not being tracked properly in the act commands
  * There are only a limited number of characters allowed per comment (500) - so commands that spit out tons of text info (e.g. !spire hp) will simply not have a response in game. I want to fix this eventually!
+ 
+ ## Extra Notes on OAUTH codes
+ * As stated several times before, the spirebot_cred.json file contains an OAUTH code which basically gives full access to your bot account. This is potentially a liability if you don't safeguard your .json file and is a major reason to not use your main account as the bot. If someone malicious gets access to this data, they can probably do a bit of havoc. This might be mitigated somewhat by 2FA, but be wary if you accidentally release your credentials or show them on screen.
+ * If you stop using this mod or have leaked your credentials, you can remove the OAUTH code from your bot account. Log in to the account -> go to Settings -> Connections, and near the bottom there should be a link for the TMI service we used originally to generate the code. You can disconnect that service and the OAUTH code will be meaningless / no longer give access to your account. You can generate a brand new code by repeating the process described in the instructions above. Please see the linked site for further details and precautions to take.
+ * Slay the Spire mods all have some inherent risk as they basically have full access to do whatever they want to your computer. Try to install only mods you trust or have been vetted by the community (esp. open source ones with a Github link or something similar where you can see the code). You should accept these risks when you install any mod - and should take special care when you start having things like OAUTH codes lying around in plain view. Just be cautious when you install other mods and understand that there is some risk that the person making it isn't trustworthy. So far, I have not run into anyone acting maliciously but it's something worth knowing.
   
   
   
