@@ -139,6 +139,9 @@ public class InfoFinder {
     }
 
     public static String bossRelics() {
+        if (!CardCrawlGame.isInARun())
+            return notRun;
+
         ArrayList<HashMap> boss_relics = CardCrawlGame.metricData.boss_relics;
         StringBuilder sb = new StringBuilder();
 
@@ -166,6 +169,9 @@ public class InfoFinder {
 
     // TODO: this is far too long for late game. Need to split it by act perhaps?
     public static String hp() {
+        if (!CardCrawlGame.isInARun())
+            return notRun;
+
         ArrayList<Integer> curr = CardCrawlGame.metricData.current_hp_per_floor;
         ArrayList<Integer> max = CardCrawlGame.metricData.max_hp_per_floor;
 
@@ -180,6 +186,9 @@ public class InfoFinder {
     // card_choices: [{not_picked=[Anger, Headbutt], picked=Pommel Strike, floor=1.0}, {not_picked=[Iron Wave, Bloodletting], picked=Inflame, floor=3.0}, {not_picked=[Dropkick, Intimidate, Iron Wave], picked=SKIP, floor=6.0}, {not_picked=[Clash, True Grit], picked=Evolve, floor=7.0}, {not_picked=[Clash, Evolve], picked=Dual Wield, floor=7.0}, {not_picked=[Reckless Charge, Dropkick], picked=Anger, floor=7.0}, {not_picked=[Anger, Perfected Strike], picked=Clothesline, floor=7.0}, {not_picked=[Searing Blow, Heavy Blade], picked=Thunderclap, floor=7.0}, {not_picked=[Warcry, Burning Pact, Whirlwind], picked=SKIP, floor=11.0}, {not_picked=[Pommel Strike, Anger], picked=Limit Break, floor=12.0}, {not_picked=[Headbutt, Perfected Strike, Whirlwind], picked=SKIP, floor=14.0}, {not_picked=[Double Tap, Barricade], picked=Limit Break, floor=16.0}, {not_picked=[Anger, Inflame], picked=Heavy Blade, floor=18.0}, {not_picked=[Twin Strike, Rampage, Burning Pact], picked=SKIP, floor=21}, {not_picked=[Searing Blow, Intimidate, Iron Wave], picked=SKIP, floor=25}]
     // TODO: probably doesn't work for shops / orrery but idk
     public static String slicesSkipped() {
+        if (!CardCrawlGame.isInARun())
+            return notRun;
+
         int timesSeen = 0;
         int timesPickedOther = 0;
         int timesPicked = 0;
