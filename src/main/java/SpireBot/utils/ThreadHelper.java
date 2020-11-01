@@ -1,11 +1,9 @@
 package SpireBot.utils;
 
-import SpireBot.SpireBot;
 import SpireBot.networking.TwitchBot;
-import SpireBot.utils.Credentials;
 
 public class ThreadHelper {
-    public static class BotThread implements Runnable {
+    private static class BotThread implements Runnable {
         private Thread thread;
         private Credentials credentials;
 

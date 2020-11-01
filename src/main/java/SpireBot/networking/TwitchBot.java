@@ -2,7 +2,6 @@ package SpireBot.networking;
 
 import SpireBot.info.CommandDatabase;
 import SpireBot.info.DefaultCommands;
-import SpireBot.info.InfoFinder;
 import SpireBot.utils.Credentials;
 
 import java.io.BufferedReader;
@@ -10,13 +9,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class TwitchBot {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
 
-//    private String prefix = "!spire ";
     private Credentials credentials;
 
     // --------------------------------------------------------------------------------
@@ -27,24 +26,6 @@ public class TwitchBot {
     }
 
     // --------------------------------------------------------------------------------
-
-//    private void handleCommand(String command) {
-//        System.out.println("Handling command '" + command + "'");
-//        String response;
-//
-//        if (command.equals("help"))
-//            response = InfoFinder.getHelp();
-//        else if (command.equals("list"))
-//            response = InfoFinder.getList();
-//        else if (command.equals("info"))
-//            response = InfoFinder.getInfo();
-//        else if (command.equals("seed"))
-//            response = InfoFinder.getSeed();
-//        else
-//            response = InfoFinder.getError();
-//
-//        sendMsg(response);
-//    }
 
     private void handleMsg(String user, String msg) {
         String response = CommandDatabase.handleMessage(user, msg);
@@ -108,17 +89,98 @@ public class TwitchBot {
         out.flush();
     }
 
-    public void sendMsg(String data) {
-        // Actual limit is 500, but let the credentials and headers and newlines have some leeway
-        if (data.length() > 450) {
-            System.out.println("OJB WARNING: data too long!");
+    // Actual limit is 500, but let there be some space for boilerplate
+    private static final int MAX_PACKET_SIZE = 450;
+
+    private ArrayList<String> smartSplit(String data) {
+        ArrayList<String> res = new ArrayList<>();
+
+        int length = data.length();
+        if (length > MAX_PACKET_SIZE) {
+            // need to split
+            String[] x = data.split("\\. ");
+            System.out.println("Split on periodspace into " + x.length + " chunks");
+
+            StringBuilder sb = new StringBuilder();
+
+            for (String s : x) {
+                int subLen = s.length() + 2;
+                System.out.println("Checking sub of size "+ subLen + ": '" + s + "'");
+
+                // Can't smart split (this sentence is too long on its own!)
+                if (subLen > MAX_PACKET_SIZE)
+                    return null;
+
+                // If this new string would make the string builder too big, start a new one
+                if (sb.length() + subLen > MAX_PACKET_SIZE) {
+                    res.add(sb.toString());
+                    sb = new StringBuilder(s);
+                    sb.append(". ");
+                }
+                else {
+                    sb.append(s);
+                    sb.append(". ");
+                }
+            }
+
+            res.add(sb.toString());
+        }
+        else {
+            res.add(data);
         }
 
-        String msg = "PRIVMSG #" + credentials.channel + " :" + data + "\r\n";
-        out.write(msg);
-        out.flush();
+        System.out.println("ORIGINAL SIZE: " + data.length() + ": '" + data + "'");
+        System.out.println("Split original data of length " + data.length() + " into " + res.size() + " chunks.");
+        for (String s : res) {
+            System.out.println("\tSIZE " + s.length() + ": '" + s + "'");
+        }
+        System.out.println("----");
 
-        System.out.println("Sent msg: " + msg);
+        return res;
+    }
+
+    private void splitAndSend(String data) {
+        if (data.length() > MAX_PACKET_SIZE) {
+            ArrayList<String> split = smartSplit(data);
+            if (split == null) {
+                System.out.println("Failed to split, doing nothing!");
+            }
+            else {
+                System.out.print("Successfully split into chunks: [");
+                for (String s : split)
+                    System.out.print(s.length() + " ");
+                System.out.println("]");
+
+                // Time to sendMsg on each chunk
+                for (String s : split)
+                    sendMsg(s);
+            }
+//            System.out.println("Need to split data: " + data);
+//            System.out.println("It's size is " + data.length());
+//
+//            String s1 = data.substring(0, MAX_PACKET_SIZE);
+//            System.out.println("Part 1 is size " + s1.length() + ": " + s1);
+//
+//            String s2 = data.substring(MAX_PACKET_SIZE);
+//            System.out.println("Part 2 is size " + s2.length() + ": " + s2);
+//
+//            // TODO: send s1 for real
+//            // TODO: recurse on s2
+        }
+    }
+
+    public void sendMsg(String data) {
+        if (data.length() > 450) {
+            System.out.println("OJB WARNING: data too long! -- attempting to split");
+            splitAndSend(data);
+        }
+        else {
+            String msg = "PRIVMSG #" + credentials.channel + " :" + data + "\r\n";
+            out.write(msg);
+            out.flush();
+
+            System.out.println("Sent msg: " + msg);
+        }
     }
 
 }

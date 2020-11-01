@@ -1,19 +1,11 @@
 package SpireBot.info;
 
-import basemod.ReflectionHacks;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
-import com.megacrit.cardcrawl.helpers.SaveHelper;
 import com.megacrit.cardcrawl.helpers.SeedHelper;
-import com.megacrit.cardcrawl.metrics.Metrics;
-import com.megacrit.cardcrawl.monsters.MonsterGroup;
-import com.megacrit.cardcrawl.relics.AbstractRelic;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeMap;
 
 public class InfoFinder {
@@ -26,10 +18,6 @@ public class InfoFinder {
     public static String getHelp(String prefix) {
         return "SpireBot is a mod to report Slay the Spire information to Twitch chat. You can query the bot using two word pairs - a prefix '" + prefix + "' followed by the actual command. Try '" + prefix + "list' for a list of valid commands.";
     }
-
-//    public static String getHelp() {
-//        return "SpireBot is a brand new mod for reporting Slay the Spire information to Twitch chat. You can query the bot using two word pairs - a prefix '!spire' followed by the actual command. Try '!spire list' for a list of commands.";
-//    }
 
     public static String getInfo() {
         if (CardCrawlGame.isInARun()) {
@@ -63,7 +51,7 @@ public class InfoFinder {
     }
 
     private static String buildActData(int minFloor, int maxFloor) {
-        // DEBUG ONLY (can comment out)
+        // DEBUG ONLY (TODO: comment out)
         BetterMetrics metrics = new BetterMetrics();
         metrics.build();
         metrics.print();
@@ -125,15 +113,12 @@ public class InfoFinder {
     public static String getAct1() {
         return (CardCrawlGame.isInARun()) ? buildActData(0, 17) : notRun;
     }
-
     public static String getAct2() {
         return (CardCrawlGame.isInARun()) ? buildActData(17, 34) : notRun;
     }
-
     public static String getAct3() {
         return (CardCrawlGame.isInARun()) ? buildActData(34, 51) : notRun;
     }
-
     public static String getAct4() {
         return (CardCrawlGame.isInARun()) ? buildActData(51, 55) : notRun;
     }
