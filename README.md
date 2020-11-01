@@ -1,5 +1,5 @@
 # SpireBot
-A mod for Slay the Spire with an integrated Twitch chat bot. It enables viewers in chat to access details usually only available on the run history screen at any time during the stream. This mod is currently WIP and has a number of known bugs.
+A mod for Slay the Spire with an integrated Twitch chat bot. It enables viewers in chat to access details usually only available on the run history screen at any time during the stream. This mod is currently WIP and has more commands planned for future updates.
 
 ![Screenshot](github/chat.png)
 
