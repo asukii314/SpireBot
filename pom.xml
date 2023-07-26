@@ -9,27 +9,40 @@
     <name>SpireBot</name>
     <description>A twitch bot for Slay the Spire</description>
 
+    <properties>
+        <version.commons-io>2.4</version.commons-io>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.megacrit.cardcrawl</groupId>
             <artifactId>slaythespire</artifactId>
             <version>016</version>
             <scope>system</scope>
-            <systemPath>${basedir}/../../lib/desktop-1.0.jar</systemPath>
+            <systemPath>${basedir}/../lib/desktop-1.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>basemod</groupId>
             <artifactId>basemod</artifactId>
             <version>2.10.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/../../lib/BaseMod.jar</systemPath>
+            <systemPath>${basedir}/../lib/BaseMod.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.evacipated.cardcrawl</groupId>
             <artifactId>ModTheSpire</artifactId>
             <version>2.6.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/../../lib/ModTheSpire.jar</systemPath>
+            <systemPath>${basedir}/../lib/ModTheSpire.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${version.commons-io}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
         </dependency>
     </dependencies>
 

@@ -1,9 +1,9 @@
 {
   "modid": "ojb_SpireBot",
   "name": "SpireBot",
-  "author_list": ["ojb"],
+  "author_list": ["ojb", "asukii"],
   "description": "An integrated Twitch bot. See https://github.com/casey-c/spirebot for details on use. (It won't work out until configured!)",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "sts_version": "06-22-2020",
   "mts_version": "2.6.0",
   "dependencies": ["basemod"]
