@@ -1,5 +1,7 @@
 package SpireBot.info;
 
+import javax.sound.sampled.Line;
+
 public class DefaultCommands {
     public static void setup() {
         // TODO: make it configurable
@@ -22,7 +24,9 @@ public class DefaultCommands {
         CommandDatabase.register(prefix, "hp", InfoFinder::hp);
 
         CommandDatabase.register(prefix, "slice", InfoFinder::slicesSkipped);
+
         CommandDatabase.register(prefix, "neow", InfoFinder::neowOptions);
+        CommandDatabase.register(prefix, "boss", InfoFinder::bossInfo);
 
         // TODO: enable or disable by config
         //CommandDatabase.registerPrefixErrorMessage(prefix, () -> "ERROR: Not a recognized command. Please use '" + prefix + "help' for more information about this bot.");

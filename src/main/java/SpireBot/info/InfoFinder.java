@@ -38,8 +38,7 @@ public class InfoFinder {
             sb.append(". Type \"!spire list\" in chat for more commands.");
 
             return sb.toString();
-        }
-        else
+        } else
             return notRun;
     }
 
@@ -115,12 +114,15 @@ public class InfoFinder {
     public static String getAct1() {
         return (CardCrawlGame.isInARun()) ? buildActData(0, 17) : notRun;
     }
+
     public static String getAct2() {
         return (CardCrawlGame.isInARun()) ? buildActData(17, 34) : notRun;
     }
+
     public static String getAct3() {
         return (CardCrawlGame.isInARun()) ? buildActData(34, 51) : notRun;
     }
+
     public static String getAct4() {
         return (CardCrawlGame.isInARun()) ? buildActData(51, 55) : notRun;
     }
@@ -144,8 +146,7 @@ public class InfoFinder {
                     String picked = k.get("picked").toString();
 
                     sb.append("At the end of act " + act++ + ", we chose " + picked + " over " + notPicked.get(0) + " and " + notPicked.get(1) + ". ");
-                }
-                else if (notPicked.size() == 3) {
+                } else if (notPicked.size() == 3) {
                     sb.append("At the end of act " + act++ + ", we took nothing and skipped " + notPicked.get(0) + ", " + notPicked.get(1) + ", and " + notPicked.get(2) + ". ");
                 }
             }
@@ -164,7 +165,7 @@ public class InfoFinder {
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < curr.size() && i < max.size(); ++i) {
-            sb.append("Floor " + (i+1) + ": [" + curr.get(i) + " / " + max.get(i) + "]. ");
+            sb.append("Floor " + (i + 1) + ": [" + curr.get(i) + " / " + max.get(i) + "]. ");
         }
 
         return sb.toString();
@@ -197,8 +198,7 @@ public class InfoFinder {
                 if (picked == "Slice") {
                     timesSeen++;
                     timesPicked++;
-                }
-                else if (skippedSlice) {
+                } else if (skippedSlice) {
                     timesSeen++;
                     timesPickedOther++;
                 }
@@ -258,6 +258,36 @@ public class InfoFinder {
         } else {
             return neow_costs.get(CardCrawlGame.metricData.neowCost) + " " + neow_bonuses.get(CardCrawlGame.metricData.neowBonus);
         }
+    }
 
+    public static String bossInfo() {
+        if (!CardCrawlGame.isInARun())
+            return notRun;
+
+        // probably doesn't work with downfall and stuff but idc
+        final int actBossFloors[] = {0,16,33,50,56};
+        StringBuilder sb = new StringBuilder();
+        int floorsAway = actBossFloors[AbstractDungeon.actNum] - AbstractDungeon.floorNum;
+
+        if(floorsAway <= 0) {
+            sb.append("We are currently in a boss fight.");
+
+        } else {
+            sb.append("We are fighting ");
+            ArrayList<String> bosses = AbstractDungeon.bossList;
+            if (bosses.isEmpty()) {
+                sb.append("an unknown boss");
+            } else {
+                sb.append(bosses.get(0));
+            }
+            sb.append(" in ");
+            sb.append(floorsAway);
+            sb.append(" floor");
+            if(floorsAway != 1)
+                sb.append("s");
+            sb.append(".");
+        }
+
+        return sb.toString();
     }
 }
