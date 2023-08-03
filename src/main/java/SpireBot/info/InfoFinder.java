@@ -1,10 +1,12 @@
 package SpireBot.info;
 
+import basemod.BaseMod;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.SeedHelper;
 
-import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -221,6 +223,26 @@ public class InfoFinder {
     public static String neowOptions() {
         if (!CardCrawlGame.isInARun())
             return notRun;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("We chose: ");
+        sb.append(formatNeowInfo(CardCrawlGame.metricData.neowBonus, CardCrawlGame.metricData.neowCost));
+
+        JsonArray bonusesSkipped = BaseMod.getSaveFields().get("NeowBonusesSkippedLog").onSaveRaw().getAsJsonArray();
+        JsonArray costsSkipped = BaseMod.getSaveFields().get("NeowCostsSkippedLog").onSaveRaw().getAsJsonArray();
+
+        sb.append(" We skipped:");
+        for (int i = 0; i < bonusesSkipped.size(); i++) {
+            sb.append(" (");
+            sb.append(i+1);
+            sb.append(") ");
+            sb.append(formatNeowInfo(bonusesSkipped.get(i).toString(), costsSkipped.get(i).toString()));
+        }
+
+        return sb.toString();
+    }
+
+   private static String formatNeowInfo(String neowBonusRaw, String neowCostRaw){
         final HashMap<String, String> neow_bonuses = new HashMap<String, String>() {{
             put("THREE_CARDS", "Choose one of three cards to obtain.");
             put("RANDOM_COLORLESS", "Choose an uncommon Colorless card to obtain.");
@@ -251,12 +273,19 @@ public class InfoFinder {
             put("TWO_STARTER_CARDS", "Add two starter cards.");
             put("ONE_STARTER_CARD", "Add a starter card.");
         }};
-        if (neow_bonuses.get(CardCrawlGame.metricData.neowBonus) == null) {
+
+        if (neowBonusRaw == null) {
             return "No neow option picked yet.";
-        } else if (CardCrawlGame.metricData.neowCost == "NONE") {
-            return neow_bonuses.get(CardCrawlGame.metricData.neowBonus);
+        }
+
+       // strip enclosing quotation marks from skipped log strings
+       String neowBonus = neow_bonuses.get(neowBonusRaw.replace("\"", ""));
+       String neowCost = neow_costs.get(neowCostRaw.replace("\"", ""));
+
+       if (neowCost == null) {
+            return neowBonus;
         } else {
-            return neow_costs.get(CardCrawlGame.metricData.neowCost) + " " + neow_bonuses.get(CardCrawlGame.metricData.neowBonus);
+            return neowCost + " " + neowBonus;
         }
     }
 
